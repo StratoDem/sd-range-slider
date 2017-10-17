@@ -1,0 +1,221 @@
+{
+  "src/components/SDRangeSlider.react.js": {
+    "description": "SDRangeSlider is an example component.\nIt takes a property, `label`, and\ndisplays it.\nIt renders an input with the property `value`\nwhich is editable by the user.",
+    "displayName": "SDRangeSlider",
+    "methods": [
+      {
+        "name": "compressedLabel",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      }
+    ],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID used to identify this component"
+      },
+      "value": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "union",
+            "value": [
+              {
+                "name": "number"
+              },
+              {
+                "name": "string"
+              }
+            ]
+          }
+        },
+        "required": false,
+        "description": "The value used to select the slider"
+      },
+      "marks": {
+        "type": {
+          "name": "shape",
+          "value": {
+            "number": {
+              "name": "union",
+              "value": [
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "shape",
+                  "value": {
+                    "style": {
+                      "name": "object",
+                      "required": false
+                    },
+                    "label": {
+                      "name": "string",
+                      "required": false
+                    }
+                  }
+                }
+              ],
+              "required": false
+            }
+          }
+        },
+        "required": false,
+        "description": "Marks on the slider.\nThe key determines the position,\nand the value determines what will show.\nIf you want to set the style of a specific mark point,\nthe value should be an object which\ncontains style and label properties."
+      },
+      "allowCross": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "allowCross could be set as true to allow those handles to cross."
+      },
+      "ascending": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Variable is strictly ascending?",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "minVal": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Minimum value for the slider"
+      },
+      "maxVal": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Maximum value for the slider"
+      },
+      "humanName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Human-readable name of the variable to display"
+      },
+      "description": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Description of the variable to display in the Dialog"
+      },
+      "allValuesText": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Text to display when all values are selected, e.g. 'all ages'"
+      },
+      "rangeFormatter": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Formatter to use which takes min and max value",
+        "defaultValue": {
+          "value": "'{} to {}'",
+          "computed": false
+        }
+      },
+      "orHigherFormatter": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Or higher string formatter",
+        "defaultValue": {
+          "value": "'{} or higher'",
+          "computed": false
+        }
+      },
+      "orLowerFormatter": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Or less string formatter",
+        "defaultValue": {
+          "value": "'Under {}'",
+          "computed": false
+        }
+      },
+      "allValuesFormatter": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "All values formatter"
+      },
+      "updatemode": {
+        "type": {
+          "name": "enum",
+          "value": [
+            {
+              "value": "'mouseup'",
+              "computed": false
+            },
+            {
+              "value": "'drag'",
+              "computed": false
+            }
+          ]
+        },
+        "required": false,
+        "description": "Determines when the component should update\nits value. If `mouseup`, then the slider\nwill only trigger its value when the user has\nfinished dragging the slider. If `drag`, then\nthe slider will update its value continuously\nas it is being dragged.\nOnly use `drag` if your updates are fast.",
+        "defaultValue": {
+          "value": "'mouseup'",
+          "computed": false
+        }
+      },
+      "buttonClassName": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Class name to apply to the button",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+      }
+    }
+  }
+}
