@@ -193,7 +193,7 @@ export default class SDRangeSlider extends Component {
           </div>
           <Dialog
             title={typeof humanName === 'string'
-              ? <h6>Edit range for <strong>{humanName.toLowerCase()}</strong></h6>
+              ? <h6>Edit range for <strong>{humanName}</strong></h6>
               : <h6>Edit range</h6>}
             actions={actions}
             modal={false}
