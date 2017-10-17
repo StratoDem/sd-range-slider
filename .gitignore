@@ -12,3 +12,5 @@ venv/
 *.egg-info
 *.log
 .DS_Store
+.idea/
+sd_range_slider/__pycache__/
