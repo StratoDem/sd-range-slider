@@ -178,7 +178,6 @@ export default class SDRangeSlider extends Component {
       <MuiThemeProvider>
         <div className="sd-range-slider">
           <div className="compressed-label">
-            {compressedLabel}
             <a
               href="#edit-slider"
               onClick={(event) => {
@@ -187,6 +186,7 @@ export default class SDRangeSlider extends Component {
               }}
               className="edit"
             >
+              <span className="label-text">{compressedLabel}</span>
               <span className={buttonClassName} />
               <span className="edit-rarr">&rarr;</span>
             </a>
