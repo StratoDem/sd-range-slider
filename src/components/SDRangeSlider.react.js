@@ -118,7 +118,7 @@ const defaultProps = {
 export default class SDRangeSlider extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: props.value, editorOpen: true};
+    this.state = {value: props.value, editorOpen: false};
   }
 
   componentWillReceiveProps(newProps) {
@@ -211,7 +211,7 @@ export default class SDRangeSlider extends Component {
                     if (fireEvent) fireEvent('change');
                   }
                 }}
-                style={{width: '82%', marginLeft: '9%'}}
+                style={{width: '82%', marginLeft: '9%', marginBottom: 20}}
                 onAfterChange={val => {
                   if (updatemode === 'mouseup') {
                     if (setProps) setProps({value: val});
