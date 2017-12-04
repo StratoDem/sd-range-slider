@@ -77,6 +77,15 @@ const propTypes = {
   /** All values formatter */
   allValuesFormatter: PropTypes.string,
 
+  /** Should the range slider try to split the label strings intelligently? */
+  splitLabels: PropTypes.bool,
+
+  /**
+   * Should the range slider apply "{} to {}"-style formatting to the label if a single value
+   * is selected?
+   */
+  singleValueFormatting: PropTypes.bool,
+
   /**
      * Determines when the component should update
      * its value. If `mouseup`, then the slider
@@ -104,7 +113,9 @@ const defaultProps = {
   rangeFormatter: '{} to {}',
   orLowerFormatter: 'Under {}',
   orHigherFormatter: '{} or higher',
-  buttonClassName: ''
+  buttonClassName: '',
+  splitLabels: true,
+  singleValueFormatting: true
 };
 
 
@@ -125,9 +136,21 @@ export default class SDRangeSlider extends Component {
     this.setState({value: newProps.value});
   }
 
+  splitLabel(label, index) {
+    const { splitLabels } = this.props;
+
+    if (splitLabels) {
+      const vals = label.split(' ');
+      if (index < 0)
+        return vals[vals.length + index];
+      return vals[index];
+    }
+
+    return label;
+  }
+
   get compressedLabel() {
     const { value } = this.state;
-    // const [lowValSelected, highValSelected] = this.state.value;
     const lowValSelected = value[0];
     const highValSelected = value[1];
 
@@ -136,28 +159,29 @@ export default class SDRangeSlider extends Component {
       allValuesText,
       orHigherFormatter,
       orLowerFormatter,
-      rangeFormatter} = this.props;
+      rangeFormatter,
+      singleValueFormatting } = this.props;
     const values = Object.keys(marks);
-    const minVal = Math.min(...values);
+    const minValue = Math.min(...values);
     const maxVal = Math.max(...values);
 
-    if (minVal === lowValSelected && maxVal === highValSelected)
+    // Selected the entire range
+    if (minValue === lowValSelected && maxVal === highValSelected)
       return allValuesText;
-    else if (minVal === lowValSelected) {
-      const vals = marks[highValSelected].label.split(' ');
-      const highStr = vals[vals.length - 1];
-      return format(orLowerFormatter, highStr);
-    } else if (maxVal === highValSelected) {
-      const vals = marks[lowValSelected].label.split(' ');
-      return format(orHigherFormatter, vals[0]);
-    }
-    const valsHigh = marks[highValSelected].label.split(' ');
-    const highStr = valsHigh[valsHigh.length - 1];
+    // We don't want to do anything special if only one value is selected
+    else if (!singleValueFormatting && lowValSelected === highValSelected)
+      return marks[lowValSelected].label;
+    // This goes from the minimum possible value up to the highest value selected
+    else if (minValue === lowValSelected)
+      return format(orLowerFormatter, this.splitLabel(marks[highValSelected].label, -1));
+    // This goes from the highest possible value down to the lowest value selected
+    else if (maxVal === highValSelected)
+      return format(orHigherFormatter, this.splitLabel(marks[lowValSelected].label, 0));
 
-    return format(
-      rangeFormatter,
-      marks[lowValSelected].label.split(' ')[0],
-      highStr);
+    const highStr = this.splitLabel(marks[highValSelected].label, -1);
+    const lowStr = this.splitLabel(marks[lowValSelected].label, 0);
+
+    return format(rangeFormatter, lowStr, highStr);
   }
 
   render() {

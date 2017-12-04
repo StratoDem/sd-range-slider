@@ -4,6 +4,22 @@
     "displayName": "SDRangeSlider",
     "methods": [
       {
+        "name": "splitLabel",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "label",
+            "type": null
+          },
+          {
+            "name": "index",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
         "name": "compressedLabel",
         "docblock": null,
         "modifiers": [],
@@ -176,6 +192,28 @@
         },
         "required": false,
         "description": "All values formatter"
+      },
+      "splitLabels": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Should the range slider try to split the label strings intelligently?",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "singleValueFormatting": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Should the range slider apply \"{} to {}\"-style formatting to the label if a single value\nis selected?",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
       },
       "updatemode": {
         "type": {
