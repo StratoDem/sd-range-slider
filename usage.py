@@ -25,6 +25,7 @@ app.layout = html.Div([
             allValuesText='All ages',
             humanName='Age cohort',
             description='Test description magic',
+            singleValueFormatting=False,
         )
     ),
     html.Div(id='output')
