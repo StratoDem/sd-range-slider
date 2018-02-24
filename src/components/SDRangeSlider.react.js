@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// @flow
+
+import React from 'react';
 import { omit } from 'ramda';
 import { Range } from 'rc-slider';
 
@@ -10,13 +11,13 @@ import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 
-const propTypes = {
-  /** The ID used to identify this component */
-  id: PropTypes.string,
+type T_STYLE_OBJ = {style: Object, label: string};
 
-  /** The value used to select the slider */
-  value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
-
+type Props = {
+  /** Component ID */
+  id: string,
+  /** Value used to select the slider */
+  value: Array<number | string>,
   /**
    * Marks on the slider.
    * The key determines the position,
@@ -25,67 +26,37 @@ const propTypes = {
    * the value should be an object which
    * contains style and label properties.
    */
-  marks: PropTypes.shape({
-    number: PropTypes.oneOfType([
-      /**
-       * The label of the mark
-       */
-      PropTypes.string,
-
-      /**
-       * The style and label of the mark
-       */
-      PropTypes.shape({
-        style: PropTypes.object,
-        label: PropTypes.string
-      })
-    ])
-  }),
-
-  /**
-   * allowCross could be set as true to allow those handles to cross.
-   */
-  allowCross: PropTypes.bool,
-
+  marks: {
+    /** Label for the mark */
+    number: string | T_STYLE_OBJ,
+  },
+  /** Set allowCross to true to allow handles to cross */
+  allowCross: boolean,
   /** Variable is strictly ascending? */
-  ascending: PropTypes.bool,
-
+  ascending?: boolean,
   /** Minimum value for the slider */
-  minVal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-
+  minVal: string | number,
   /** Maximum value for the slider */
-  maxVal: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-
+  maxVal: string | number,
   /** Human-readable name of the variable to display */
-  humanName: PropTypes.string,
-
+  humanName: string,
   /** Description of the variable to display in the Dialog */
-  description: PropTypes.string,
-
-  /** Text to display when all values are selected, e.g. 'all ages' */
-  allValuesText: PropTypes.string,
-
+  description: string,
+  /** Text to display when all values are selected, e.g., 'all ages' */
+  allValuesText: string,
   /** Formatter to use which takes min and max value */
-  rangeFormatter: PropTypes.string,
-
+  rangeFormatter?: string,
   /** Or higher string formatter */
-  orHigherFormatter: PropTypes.string,
-
+  orHigherFormatter?: string,
   /** Or less string formatter */
-  orLowerFormatter: PropTypes.string,
-
+  orLowerFormatter?: string,
   /** All values formatter */
-  allValuesFormatter: PropTypes.string,
-
+  allValuesFormatter: string,
   /** Should the range slider try to split the label strings intelligently? */
-  splitLabels: PropTypes.bool,
-
-  /**
-   * Should the range slider apply "{} to {}"-style formatting to the label if a single value
-   * is selected?
-   */
-  singleValueFormatting: PropTypes.bool,
-
+  splitLabels?: boolean,
+  /** Should the range slider apply "{} to {}"-style formatting to the label is a single
+   * value is selected? */
+  singleValueFormatting?: boolean,
   /**
      * Determines when the component should update
      * its value. If `mouseup`, then the slider
@@ -95,17 +66,20 @@ const propTypes = {
      * as it is being dragged.
      * Only use `drag` if your updates are fast.
      */
-    updatemode: PropTypes.oneOf(['mouseup', 'drag']),
-
+  updatemode?: 'mouseup' | 'drag',
   /** Class name to apply to the button */
-  buttonClassName: PropTypes.string,
-
+  buttonClassName?: string,
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
    */
-  setProps: PropTypes.func
-};
+  setProps?: (props: Object) => void,
+}
+
+type State = {
+  value: string | number,
+  editorOpen: boolean,
+}
 
 const defaultProps = {
   ascending: true,
@@ -115,7 +89,7 @@ const defaultProps = {
   orHigherFormatter: '{} or higher',
   buttonClassName: '',
   splitLabels: true,
-  singleValueFormatting: true
+  singleValueFormatting: true,
 };
 
 
@@ -126,17 +100,17 @@ const defaultProps = {
  * It renders an input with the property `value`
  * which is editable by the user.
  */
-export default class SDRangeSlider extends Component {
+export default class SDRangeSlider extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {value: props.value, editorOpen: false};
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps(newProps: Props): void {
     this.setState({value: newProps.value});
   }
 
-  splitLabel(label, index) {
+  splitLabel(label: string, index: number): string {
     const { splitLabels } = this.props;
 
     if (splitLabels) {
@@ -149,7 +123,7 @@ export default class SDRangeSlider extends Component {
     return label;
   }
 
-  get compressedLabel() {
+  get compressedLabel(): string {
     const { value } = this.state;
     const lowValSelected = value[0];
     const highValSelected = value[1];
@@ -254,5 +228,4 @@ export default class SDRangeSlider extends Component {
   }
 }
 
-SDRangeSlider.propTypes = propTypes;
 SDRangeSlider.defaultProps = defaultProps;
