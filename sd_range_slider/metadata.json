@@ -10,17 +10,47 @@
         "params": [
           {
             "name": "label",
-            "type": null
+            "type": {
+              "name": "string"
+            }
           },
           {
             "name": "index",
-            "type": null
+            "type": {
+              "name": "number"
+            }
           }
         ],
-        "returns": null
+        "returns": {
+          "type": {
+            "name": "string"
+          }
+        }
+      },
+      {
+        "name": "compressedLabelCategorical",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": {
+          "type": {
+            "name": "string"
+          }
+        }
       },
       {
         "name": "compressedLabel",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": {
+          "type": {
+            "name": "string"
+          }
+        }
+      },
+      {
+        "name": "rangeComponent",
         "docblock": null,
         "modifiers": [],
         "params": [],
@@ -29,71 +59,88 @@
     ],
     "props": {
       "id": {
-        "type": {
+        "flowType": {
           "name": "string"
         },
-        "required": false,
-        "description": "The ID used to identify this component"
+        "required": true,
+        "description": "Component ID"
       },
       "value": {
-        "type": {
-          "name": "arrayOf",
-          "value": {
-            "name": "union",
-            "value": [
+        "flowType": {
+          "name": "Array",
+          "elements": [
+            {
+              "name": "number"
+            }
+          ],
+          "raw": "Array<number>"
+        },
+        "required": true,
+        "description": "Value used to select the slider"
+      },
+      "marks": {
+        "flowType": {
+          "name": "signature",
+          "type": "object",
+          "raw": "{\n  /** Label for the mark */\n  number: string | T_STYLE_OBJ,\n}",
+          "signature": {
+            "properties": [
               {
-                "name": "number"
-              },
-              {
-                "name": "string"
+                "key": "number",
+                "value": {
+                  "name": "union",
+                  "raw": "string | T_STYLE_OBJ",
+                  "elements": [
+                    {
+                      "name": "string"
+                    },
+                    {
+                      "name": "signature",
+                      "type": "object",
+                      "raw": "{style: Object, label: string}",
+                      "signature": {
+                        "properties": [
+                          {
+                            "key": "style",
+                            "value": {
+                              "name": "Object",
+                              "required": true
+                            }
+                          },
+                          {
+                            "key": "label",
+                            "value": {
+                              "name": "string",
+                              "required": true
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "required": true
+                }
               }
             ]
           }
         },
-        "required": false,
-        "description": "The value used to select the slider"
-      },
-      "marks": {
-        "type": {
-          "name": "shape",
-          "value": {
-            "number": {
-              "name": "union",
-              "value": [
-                {
-                  "name": "string"
-                },
-                {
-                  "name": "shape",
-                  "value": {
-                    "style": {
-                      "name": "object",
-                      "required": false
-                    },
-                    "label": {
-                      "name": "string",
-                      "required": false
-                    }
-                  }
-                }
-              ],
-              "required": false
-            }
-          }
-        },
-        "required": false,
+        "required": true,
         "description": "Marks on the slider.\nThe key determines the position,\nand the value determines what will show.\nIf you want to set the style of a specific mark point,\nthe value should be an object which\ncontains style and label properties."
       },
       "allowCross": {
-        "type": {
-          "name": "bool"
+        "flowType": {
+          "name": "boolean"
         },
         "required": false,
-        "description": "allowCross could be set as true to allow those handles to cross."
+        "description": "Set allowCross to true to allow handles to cross",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
       },
       "ascending": {
-        "type": {
-          "name": "bool"
+        "flowType": {
+          "name": "boolean"
         },
         "required": false,
         "description": "Variable is strictly ascending?",
@@ -103,58 +150,71 @@
         }
       },
       "minVal": {
-        "type": {
+        "flowType": {
           "name": "union",
-          "value": [
-            {
-              "name": "number"
-            },
+          "raw": "string | number",
+          "elements": [
             {
               "name": "string"
+            },
+            {
+              "name": "number"
             }
           ]
         },
-        "required": false,
+        "required": true,
         "description": "Minimum value for the slider"
       },
       "maxVal": {
-        "type": {
+        "flowType": {
           "name": "union",
-          "value": [
-            {
-              "name": "number"
-            },
+          "raw": "string | number",
+          "elements": [
             {
               "name": "string"
+            },
+            {
+              "name": "number"
             }
           ]
         },
-        "required": false,
+        "required": true,
         "description": "Maximum value for the slider"
       },
       "humanName": {
-        "type": {
+        "flowType": {
           "name": "string"
         },
-        "required": false,
+        "required": true,
         "description": "Human-readable name of the variable to display"
       },
       "description": {
-        "type": {
+        "flowType": {
           "name": "string"
         },
-        "required": false,
+        "required": true,
         "description": "Description of the variable to display in the Dialog"
       },
       "allValuesText": {
-        "type": {
+        "flowType": {
+          "name": "string"
+        },
+        "required": true,
+        "description": "Text to display when all values are selected, e.g., 'all ages'"
+      },
+      "noValuesText": {
+        "flowType": {
           "name": "string"
         },
         "required": false,
-        "description": "Text to display when all values are selected, e.g. 'all ages'"
+        "description": "Text to display when no values are selected, e.g., 'any age'",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
       },
       "rangeFormatter": {
-        "type": {
+        "flowType": {
           "name": "string"
         },
         "required": false,
@@ -165,7 +225,7 @@
         }
       },
       "orHigherFormatter": {
-        "type": {
+        "flowType": {
           "name": "string"
         },
         "required": false,
@@ -176,7 +236,7 @@
         }
       },
       "orLowerFormatter": {
-        "type": {
+        "flowType": {
           "name": "string"
         },
         "required": false,
@@ -187,15 +247,19 @@
         }
       },
       "allValuesFormatter": {
-        "type": {
+        "flowType": {
           "name": "string"
         },
         "required": false,
-        "description": "All values formatter"
+        "description": "All values formatter",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
       },
       "splitLabels": {
-        "type": {
-          "name": "bool"
+        "flowType": {
+          "name": "boolean"
         },
         "required": false,
         "description": "Should the range slider try to split the label strings intelligently?",
@@ -205,27 +269,28 @@
         }
       },
       "singleValueFormatting": {
-        "type": {
-          "name": "bool"
+        "flowType": {
+          "name": "boolean"
         },
         "required": false,
-        "description": "Should the range slider apply \"{} to {}\"-style formatting to the label if a single value\nis selected?",
+        "description": "Should the range slider apply \"{} to {}\"-style formatting to the label is a single\nvalue is selected?",
         "defaultValue": {
           "value": "true",
           "computed": false
         }
       },
       "updatemode": {
-        "type": {
-          "name": "enum",
-          "value": [
+        "flowType": {
+          "name": "union",
+          "raw": "'mouseup' | 'drag'",
+          "elements": [
             {
-              "value": "'mouseup'",
-              "computed": false
+              "name": "literal",
+              "value": "'mouseup'"
             },
             {
-              "value": "'drag'",
-              "computed": false
+              "name": "literal",
+              "value": "'drag'"
             }
           ]
         },
@@ -237,7 +302,7 @@
         }
       },
       "buttonClassName": {
-        "type": {
+        "flowType": {
           "name": "string"
         },
         "required": false,
@@ -247,9 +312,35 @@
           "computed": false
         }
       },
+      "isCategorical": {
+        "flowType": {
+          "name": "boolean"
+        },
+        "required": false,
+        "description": "Is the variable categorical? Use checkboxes instead then",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
       "setProps": {
-        "type": {
-          "name": "func"
+        "flowType": {
+          "name": "signature",
+          "type": "function",
+          "raw": "(props: Object) => void",
+          "signature": {
+            "arguments": [
+              {
+                "name": "props",
+                "type": {
+                  "name": "Object"
+                }
+              }
+            ],
+            "return": {
+              "name": "void"
+            }
+          }
         },
         "required": false,
         "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"

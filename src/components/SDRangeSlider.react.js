@@ -8,6 +8,7 @@ import format from 'string-format';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import Checkbox from 'material-ui/Checkbox';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 
@@ -17,7 +18,7 @@ type Props = {
   /** Component ID */
   id: string,
   /** Value used to select the slider */
-  value: Array<number | string>,
+  value: Array<number>,
   /**
    * Marks on the slider.
    * The key determines the position,
@@ -31,7 +32,7 @@ type Props = {
     number: string | T_STYLE_OBJ,
   },
   /** Set allowCross to true to allow handles to cross */
-  allowCross: boolean,
+  allowCross?: boolean,
   /** Variable is strictly ascending? */
   ascending?: boolean,
   /** Minimum value for the slider */
@@ -44,6 +45,8 @@ type Props = {
   description: string,
   /** Text to display when all values are selected, e.g., 'all ages' */
   allValuesText: string,
+  /** Text to display when no values are selected, e.g., 'any age' */
+  noValuesText?: string,
   /** Formatter to use which takes min and max value */
   rangeFormatter?: string,
   /** Or higher string formatter */
@@ -51,7 +54,7 @@ type Props = {
   /** Or less string formatter */
   orLowerFormatter?: string,
   /** All values formatter */
-  allValuesFormatter: string,
+  allValuesFormatter?: string,
   /** Should the range slider try to split the label strings intelligently? */
   splitLabels?: boolean,
   /** Should the range slider apply "{} to {}"-style formatting to the label is a single
@@ -69,6 +72,8 @@ type Props = {
   updatemode?: 'mouseup' | 'drag',
   /** Class name to apply to the button */
   buttonClassName?: string,
+  /** Is the variable categorical? Use checkboxes instead then */
+  isCategorical?: boolean,
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
@@ -77,7 +82,7 @@ type Props = {
 }
 
 type State = {
-  value: string | number,
+  value: Array<string | number>,
   editorOpen: boolean,
 }
 
@@ -90,6 +95,10 @@ const defaultProps = {
   buttonClassName: '',
   splitLabels: true,
   singleValueFormatting: true,
+  isCategorical: false,
+  allowCross: true,
+  allValuesFormatter: '',
+  noValuesText: '',
 };
 
 
@@ -121,6 +130,19 @@ export default class SDRangeSlider extends React.Component<Props, State> {
     }
 
     return label;
+  }
+
+  get compressedLabelCategorical(): string {
+    const { value } = this.state;
+    const valuesSorted = value.slice().sort();
+
+    // Selected the entire range
+    if (value.length === Object.keys(this.props.marks).length)
+      return this.props.allValuesText;
+    else if (value.length === 0)
+      return this.props.noValuesText;
+
+    return valuesSorted.map(v => this.props.marks[v].label).join(', ');
   }
 
   get compressedLabel(): string {
@@ -158,9 +180,60 @@ export default class SDRangeSlider extends React.Component<Props, State> {
     return format(rangeFormatter, lowStr, highStr);
   }
 
-  render() {
-    const { fireEvent, setProps, updatemode, buttonClassName, humanName, description } = this.props;
+  get rangeComponent() {
+    const { isCategorical, fireEvent, setProps, updatemode } = this.props;
     const { value } = this.state;
+
+    return isCategorical
+      ? (
+        <div>
+          {
+            Object.keys(this.props.marks).map((val: number) => {
+              const markValue = parseInt(String(val));
+
+              return (
+                <Checkbox
+                  label={this.props.marks[markValue].label}
+                  checked={value.indexOf(markValue) >= 0}
+                  onCheck={() => {
+                    const idxValue = value.indexOf(markValue);
+                    const valueCopy = value.slice();
+
+                    if (idxValue >= 0)
+                      valueCopy.splice(idxValue, 1);
+                    else
+                      valueCopy.push(markValue);
+                    this.setState({value: valueCopy});
+                  }}
+                />)
+            })
+          }
+        </div>)
+      :(
+      <Range
+        onChange={val => {
+          this.setState({value: val});
+          if (updatemode === 'drag') {
+            if (setProps) setProps({value: val});
+            if (fireEvent) fireEvent('change');
+          }
+        }}
+        style={{width: '82%', marginLeft: '9%', marginBottom: 20}}
+        onAfterChange={val => {
+          if (updatemode === 'mouseup') {
+            if (setProps) setProps({value: val});
+            if (fireEvent) fireEvent('change');
+          }
+        }}
+        value={value}
+        {...omit(
+          ['value', 'fireEvent', 'setProps', 'updatemode'],
+          {...this.props, min: this.props.minVal, max: this.props.maxVal})}
+      />)
+  }
+
+  render() {
+    const { isCategorical, buttonClassName, humanName, description } = this.props;
 
     const actions = [
       <FlatButton
@@ -170,7 +243,7 @@ export default class SDRangeSlider extends React.Component<Props, State> {
       />
     ];
 
-    const compressedLabel = this.compressedLabel;
+    const compressedLabel = isCategorical ? this.compressedLabelCategorical : this.compressedLabel;
 
     return (
       <MuiThemeProvider>
@@ -201,26 +274,7 @@ export default class SDRangeSlider extends React.Component<Props, State> {
             <div>
               <p>{description}</p>
               <p>Selected: <strong>{compressedLabel}</strong></p>
-              <Range
-                onChange={val => {
-                  this.setState({value: val});
-                  if (updatemode === 'drag') {
-                    if (setProps) setProps({value: val});
-                    if (fireEvent) fireEvent('change');
-                  }
-                }}
-                style={{width: '82%', marginLeft: '9%', marginBottom: 20}}
-                onAfterChange={val => {
-                  if (updatemode === 'mouseup') {
-                    if (setProps) setProps({value: val});
-                    if (fireEvent) fireEvent('change');
-                  }
-                }}
-                value={value}
-                {...omit(
-                  ['value', 'fireEvent', 'setProps', 'updatemode'],
-                  {...this.props, min: this.props.minVal, max: this.props.maxVal})}
-              />
+              {this.rangeComponent}
             </div>
           </Dialog>
         </div>

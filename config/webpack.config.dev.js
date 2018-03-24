@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const sourcePath = path.join(__dirname, '../src');
-const bundlesPath = path.resolve('./sd_material_ui');
+const bundlesPath = path.resolve('./sd_range_slider');
 const nodeModulesPath = path.join(__dirname, '../node_modules/');
 
 
