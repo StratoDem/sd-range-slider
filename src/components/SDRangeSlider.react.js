@@ -112,11 +112,16 @@ const defaultProps = {
 export default class SDRangeSlider extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-    this.state = {value: props.value, editorOpen: false};
+    this.state = {
+      value: props.isCategorical ? Array.from(new Set(props.value)) : props.value,
+      editorOpen: false,
+    };
   }
 
-  componentWillReceiveProps(newProps: Props): void {
-    this.setState({value: newProps.value});
+  componentWillReceiveProps(nextProps: Props): void {
+    this.setState({
+      value: nextProps.isCategorical ? Array.from(new Set(nextProps.value)) : nextProps.value,
+    });
   }
 
   splitLabel(label: string, index: number): string {
