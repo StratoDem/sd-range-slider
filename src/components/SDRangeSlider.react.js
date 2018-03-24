@@ -204,6 +204,8 @@ export default class SDRangeSlider extends React.Component<Props, State> {
                     else
                       valueCopy.push(markValue);
                     this.setState({value: valueCopy});
+                    if (setProps) setProps({value: valueCopy});
+                    if (fireEvent) fireEvent('change');
                   }}
                 />)
             })
