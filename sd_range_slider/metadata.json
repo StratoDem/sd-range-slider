@@ -58,6 +58,71 @@
       }
     ],
     "props": {
+      "allowCross": {
+        "flowType": {
+          "name": "boolean"
+        },
+        "required": false,
+        "description": "Set allowCross to true to allow handles to cross",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "allValuesFormatter": {
+        "flowType": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "All values formatter",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "allValuesText": {
+        "flowType": {
+          "name": "string"
+        },
+        "required": true,
+        "description": "Text to display when all values are selected, e.g., 'all ages'"
+      },
+      "ascending": {
+        "flowType": {
+          "name": "boolean"
+        },
+        "required": false,
+        "description": "Variable is strictly ascending?",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "buttonClassName": {
+        "flowType": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Class name to apply to the button",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "description": {
+        "flowType": {
+          "name": "string"
+        },
+        "required": true,
+        "description": "Description of the variable to display in the Dialog"
+      },
+      "humanName": {
+        "flowType": {
+          "name": "string"
+        },
+        "required": true,
+        "description": "Human-readable name of the variable to display"
+      },
       "id": {
         "flowType": {
           "name": "string"
@@ -65,18 +130,16 @@
         "required": true,
         "description": "Component ID"
       },
-      "value": {
+      "isCategorical": {
         "flowType": {
-          "name": "Array",
-          "elements": [
-            {
-              "name": "number"
-            }
-          ],
-          "raw": "Array<number>"
+          "name": "boolean"
         },
-        "required": true,
-        "description": "Value used to select the slider"
+        "required": false,
+        "description": "Is the variable categorical? Use checkboxes instead then",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
       },
       "marks": {
         "flowType": {
@@ -127,25 +190,30 @@
         "required": true,
         "description": "Marks on the slider.\nThe key determines the position,\nand the value determines what will show.\nIf you want to set the style of a specific mark point,\nthe value should be an object which\ncontains style and label properties."
       },
-      "allowCross": {
+      "maxVal": {
         "flowType": {
-          "name": "boolean"
+          "name": "union",
+          "raw": "string | number",
+          "elements": [
+            {
+              "name": "string"
+            },
+            {
+              "name": "number"
+            }
+          ]
         },
-        "required": false,
-        "description": "Set allowCross to true to allow handles to cross",
-        "defaultValue": {
-          "value": "true",
-          "computed": false
-        }
+        "required": true,
+        "description": "Maximum value for the slider"
       },
-      "ascending": {
+      "minCategoriesSelected": {
         "flowType": {
-          "name": "boolean"
+          "name": "number"
         },
         "required": false,
-        "description": "Variable is strictly ascending?",
+        "description": "The minimum allowed number of categorical selections. Any fewer will trigger a warning.",
         "defaultValue": {
-          "value": "true",
+          "value": "1",
           "computed": false
         }
       },
@@ -165,43 +233,6 @@
         "required": true,
         "description": "Minimum value for the slider"
       },
-      "maxVal": {
-        "flowType": {
-          "name": "union",
-          "raw": "string | number",
-          "elements": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "number"
-            }
-          ]
-        },
-        "required": true,
-        "description": "Maximum value for the slider"
-      },
-      "humanName": {
-        "flowType": {
-          "name": "string"
-        },
-        "required": true,
-        "description": "Human-readable name of the variable to display"
-      },
-      "description": {
-        "flowType": {
-          "name": "string"
-        },
-        "required": true,
-        "description": "Description of the variable to display in the Dialog"
-      },
-      "allValuesText": {
-        "flowType": {
-          "name": "string"
-        },
-        "required": true,
-        "description": "Text to display when all values are selected, e.g., 'all ages'"
-      },
       "noValuesText": {
         "flowType": {
           "name": "string"
@@ -210,17 +241,6 @@
         "description": "Text to display when no values are selected, e.g., 'any age'",
         "defaultValue": {
           "value": "''",
-          "computed": false
-        }
-      },
-      "rangeFormatter": {
-        "flowType": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "Formatter to use which takes min and max value",
-        "defaultValue": {
-          "value": "'{} to {}'",
           "computed": false
         }
       },
@@ -246,14 +266,47 @@
           "computed": false
         }
       },
-      "allValuesFormatter": {
+      "rangeFormatter": {
         "flowType": {
           "name": "string"
         },
         "required": false,
-        "description": "All values formatter",
+        "description": "Formatter to use which takes min and max value",
         "defaultValue": {
-          "value": "''",
+          "value": "'{} to {}'",
+          "computed": false
+        }
+      },
+      "setProps": {
+        "flowType": {
+          "name": "signature",
+          "type": "function",
+          "raw": "(props: Object) => void",
+          "signature": {
+            "arguments": [
+              {
+                "name": "props",
+                "type": {
+                  "name": "Object"
+                }
+              }
+            ],
+            "return": {
+              "name": "void"
+            }
+          }
+        },
+        "required": false,
+        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+      },
+      "singleValueFormatting": {
+        "flowType": {
+          "name": "boolean"
+        },
+        "required": false,
+        "description": "Should the range slider apply \"{} to {}\"-style formatting to the label is a single\nvalue is selected?",
+        "defaultValue": {
+          "value": "true",
           "computed": false
         }
       },
@@ -263,17 +316,6 @@
         },
         "required": false,
         "description": "Should the range slider try to split the label strings intelligently?",
-        "defaultValue": {
-          "value": "true",
-          "computed": false
-        }
-      },
-      "singleValueFormatting": {
-        "flowType": {
-          "name": "boolean"
-        },
-        "required": false,
-        "description": "Should the range slider apply \"{} to {}\"-style formatting to the label is a single\nvalue is selected?",
         "defaultValue": {
           "value": "true",
           "computed": false
@@ -301,49 +343,18 @@
           "computed": false
         }
       },
-      "buttonClassName": {
+      "value": {
         "flowType": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "Class name to apply to the button",
-        "defaultValue": {
-          "value": "''",
-          "computed": false
-        }
-      },
-      "isCategorical": {
-        "flowType": {
-          "name": "boolean"
-        },
-        "required": false,
-        "description": "Is the variable categorical? Use checkboxes instead then",
-        "defaultValue": {
-          "value": "false",
-          "computed": false
-        }
-      },
-      "setProps": {
-        "flowType": {
-          "name": "signature",
-          "type": "function",
-          "raw": "(props: Object) => void",
-          "signature": {
-            "arguments": [
-              {
-                "name": "props",
-                "type": {
-                  "name": "Object"
-                }
-              }
-            ],
-            "return": {
-              "name": "void"
+          "name": "Array",
+          "elements": [
+            {
+              "name": "number"
             }
-          }
+          ],
+          "raw": "Array<number>"
         },
-        "required": false,
-        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+        "required": true,
+        "description": "Value used to select the slider"
       },
       "warningMessageClassName": {
         "flowType": {

@@ -15,10 +15,33 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 type T_STYLE_OBJ = {style: Object, label: string};
 
 type Props = {
+  /** Set allowCross to true to allow handles to cross */
+  allowCross?: boolean,
+
+  /** All values formatter */
+  allValuesFormatter?: string,
+
+  /** Text to display when all values are selected, e.g., 'all ages' */
+  allValuesText: string,
+
+  /** Variable is strictly ascending? */
+  ascending?: boolean,
+
+  /** Class name to apply to the button */
+  buttonClassName?: string,
+
+  /** Description of the variable to display in the Dialog */
+  description: string,
+
+  /** Human-readable name of the variable to display */
+  humanName: string,
+
   /** Component ID */
   id: string,
-  /** Value used to select the slider */
-  value: Array<number>,
+
+  /** Is the variable categorical? Use checkboxes instead then */
+  isCategorical?: boolean,
+
   /**
    * Marks on the slider.
    * The key determines the position,
@@ -31,35 +54,43 @@ type Props = {
     /** Label for the mark */
     number: string | T_STYLE_OBJ,
   },
-  /** Set allowCross to true to allow handles to cross */
-  allowCross?: boolean,
-  /** Variable is strictly ascending? */
-  ascending?: boolean,
-  /** Minimum value for the slider */
-  minVal: string | number,
+
   /** Maximum value for the slider */
   maxVal: string | number,
-  /** Human-readable name of the variable to display */
-  humanName: string,
-  /** Description of the variable to display in the Dialog */
-  description: string,
-  /** Text to display when all values are selected, e.g., 'all ages' */
-  allValuesText: string,
+
+  /**
+   * The minimum allowed number of categorical selections. Any fewer will trigger a warning.
+   */
+  minCategoriesSelected?: number,
+
+  /** Minimum value for the slider */
+  minVal: string | number,
+
   /** Text to display when no values are selected, e.g., 'any age' */
   noValuesText?: string,
-  /** Formatter to use which takes min and max value */
-  rangeFormatter?: string,
+
   /** Or higher string formatter */
   orHigherFormatter?: string,
+
   /** Or less string formatter */
   orLowerFormatter?: string,
-  /** All values formatter */
-  allValuesFormatter?: string,
-  /** Should the range slider try to split the label strings intelligently? */
-  splitLabels?: boolean,
+
+  /** Formatter to use which takes min and max value */
+  rangeFormatter?: string,
+
+  /**
+   * Dash-assigned callback that should be called whenever any of the
+   * properties change
+   */
+  setProps?: (props: Object) => void,
+
   /** Should the range slider apply "{} to {}"-style formatting to the label is a single
    * value is selected? */
   singleValueFormatting?: boolean,
+
+  /** Should the range slider try to split the label strings intelligently? */
+  splitLabels?: boolean,
+
   /**
      * Determines when the component should update
      * its value. If `mouseup`, then the slider
@@ -70,15 +101,10 @@ type Props = {
      * Only use `drag` if your updates are fast.
      */
   updatemode?: 'mouseup' | 'drag',
-  /** Class name to apply to the button */
-  buttonClassName?: string,
-  /** Is the variable categorical? Use checkboxes instead then */
-  isCategorical?: boolean,
-  /**
-   * Dash-assigned callback that should be called whenever any of the
-   * properties change
-   */
-  setProps?: (props: Object) => void,
+
+  /** Value used to select the slider */
+  value: Array<number>,
+
   /**
    * The classname used for styling the warning message if the user attempts to select no checkboxes
    */
@@ -86,24 +112,25 @@ type Props = {
 }
 
 type State = {
+  editorOpen: boolean,
   selectionWarning: string,
   value: Array<string | number>,
-  editorOpen: boolean,
 }
 
 const defaultProps = {
-  ascending: true,
-  updatemode: 'mouseup',
-  rangeFormatter: '{} to {}',
-  orLowerFormatter: 'Under {}',
-  orHigherFormatter: '{} or higher',
-  buttonClassName: '',
-  splitLabels: true,
-  singleValueFormatting: true,
-  isCategorical: false,
   allowCross: true,
   allValuesFormatter: '',
+  ascending: true,
+  buttonClassName: '',
+  isCategorical: false,
+  minCategoriesSelected: 1,
   noValuesText: '',
+  orLowerFormatter: 'Under {}',
+  orHigherFormatter: '{} or higher',
+  rangeFormatter: '{} to {}',
+  singleValueFormatting: true,
+  splitLabels: true,
+  updatemode: 'mouseup',
   warningMessageClassName: 'selection-warning',
 };
 
@@ -214,10 +241,11 @@ export default class SDRangeSlider extends React.Component<Props, State> {
                     if (idxValue >= 0) {
                       // If the selection to be removed is the only selected item, prevent it and
                       // update the dialog with a message to alert the user.
-                      if (valueCopy.length === 1) {
+                      if (valueCopy.length === this.props.minCategoriesSelected) {
                         if (this.state.selectionWarning.length === 0) {
                           this.setState({
-                            selectionWarning: 'Must have at least one item selected.'
+                            selectionWarning: 'Minimum number of selections allowed: ' +
+                            this.props.minCategoriesSelected.toString()
                           });
                         }
                         return undefined;
