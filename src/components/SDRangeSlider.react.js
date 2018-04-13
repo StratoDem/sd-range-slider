@@ -79,9 +79,14 @@ type Props = {
    * properties change
    */
   setProps?: (props: Object) => void,
+  /**
+   * The classname used for styling the warning message if the user attempts to select no checkboxes
+   */
+  warningMessageClassName?: string,
 }
 
 type State = {
+  selectionWarning: string,
   value: Array<string | number>,
   editorOpen: boolean,
 }
@@ -99,6 +104,7 @@ const defaultProps = {
   allowCross: true,
   allValuesFormatter: '',
   noValuesText: '',
+  warningMessageClassName: 'selection-warning',
 };
 
 
@@ -113,6 +119,7 @@ export default class SDRangeSlider extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
+      selectionWarning: '',
       value: props.isCategorical ? Array.from(new Set(props.value)) : props.value,
       editorOpen: false,
     };
@@ -204,10 +211,28 @@ export default class SDRangeSlider extends React.Component<Props, State> {
                     const idxValue = value.indexOf(markValue);
                     const valueCopy = value.slice();
 
-                    if (idxValue >= 0)
-                      valueCopy.splice(idxValue, 1);
-                    else
+                    if (idxValue >= 0) {
+                      // If the selection to be removed is the only selected item, prevent it and
+                      // update the dialog with a message to alert the user.
+                      if (valueCopy.length === 1) {
+                        if (this.state.selectionWarning.length === 0) {
+                          this.setState({
+                            selectionWarning: 'Must have at least one item selected.'
+                          });
+                        }
+                        return undefined;
+                      }
+                      else {
+                        valueCopy.splice(idxValue, 1);
+                        // If this is not the last selected item being removed, make sure to
+                        // clear away the warning.
+                        this.setState({selectionWarning: ''});
+                        }
+                    }
+                    else {
                       valueCopy.push(markValue);
+                      this.setState({selectionWarning: ''});
+                    }
                     this.setState({value: valueCopy});
                     if (setProps) setProps({value: valueCopy});
                     if (fireEvent) fireEvent('change');
@@ -240,7 +265,7 @@ export default class SDRangeSlider extends React.Component<Props, State> {
   }
 
   render() {
-    const { isCategorical, buttonClassName, humanName, description } = this.props;
+    const { isCategorical, buttonClassName, humanName } = this.props;
 
     const actions = [
       <FlatButton
@@ -260,7 +285,10 @@ export default class SDRangeSlider extends React.Component<Props, State> {
               href="#edit-slider"
               onClick={(event) => {
                 event.preventDefault();
-                this.setState({editorOpen: true});
+                this.setState({
+                  selectionWarning: '',
+                  editorOpen: true
+                });
               }}
               className="edit"
             >
@@ -276,10 +304,16 @@ export default class SDRangeSlider extends React.Component<Props, State> {
             actions={actions}
             modal={false}
             open={this.state.editorOpen}
-            onRequestClose={() => { this.setState({editorOpen: false}); }}
+            onRequestClose={() => {
+              this.setState({
+                selectionWarning: '',
+                editorOpen: false
+              });
+            }}
           >
             <div>
-              <p>{description}</p>
+              <p>{this.state.description}</p>
+              <p className={this.props.warningMessageClassName}>{this.state.selectionWarning}</p>
               <p>Selected: <strong>{compressedLabel}</strong></p>
               {this.rangeComponent}
             </div>
