@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.7.0] 2018.04.13
+### Changed
+- The categorical version of the component will no longer allow a user to clear all selections
+
 [1.6.2] 2018.03.24
 ### Changed
 - Remove duplicates from value prop if the slider is for a categorical variable
