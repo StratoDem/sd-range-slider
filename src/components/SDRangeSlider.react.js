@@ -30,6 +30,9 @@ type Props = {
   /** Class name to apply to the button */
   buttonClassName?: string,
 
+  /** Class name to apply to the div that wraps the entire component */
+  className?: string,
+
   /** Description of the variable to display in the Dialog */
   description: string,
 
@@ -122,6 +125,7 @@ const defaultProps = {
   allValuesFormatter: '',
   ascending: true,
   buttonClassName: '',
+  className: '',
   isCategorical: false,
   minCategoriesSelected: 1,
   noValuesText: '',
@@ -293,7 +297,7 @@ export default class SDRangeSlider extends React.Component<Props, State> {
   }
 
   render() {
-    const { isCategorical, buttonClassName, humanName } = this.props;
+    const { isCategorical, buttonClassName, className, humanName } = this.props;
 
     const actions = [
       <FlatButton
@@ -306,48 +310,50 @@ export default class SDRangeSlider extends React.Component<Props, State> {
     const compressedLabel = isCategorical ? this.compressedLabelCategorical : this.compressedLabel;
 
     return (
-      <MuiThemeProvider>
-        <div className="sd-range-slider">
-          <div className="compressed-label">
-            <a
-              href="#edit-slider"
-              onClick={(event) => {
-                event.preventDefault();
+      <div className={className}>
+        <MuiThemeProvider>
+          <div className="sd-range-slider">
+            <div className="compressed-label">
+              <a
+                href="#edit-slider"
+                onClick={(event) => {
+                  event.preventDefault();
+                  this.setState({
+                    selectionWarning: '',
+                    editorOpen: true
+                  });
+                }}
+                className="edit"
+              >
+                <span className="label-text">{compressedLabel}</span>
+                <span className={buttonClassName} />
+                <span className="edit-rarr">&rarr;</span>
+              </a>
+            </div>
+            <Dialog
+              title={typeof humanName === 'string'
+                ? <h6>Edit range for <strong>{humanName}</strong></h6>
+                : <h6>Edit range</h6>}
+              actions={actions}
+              modal={false}
+              open={this.state.editorOpen}
+              onRequestClose={() => {
                 this.setState({
                   selectionWarning: '',
-                  editorOpen: true
+                  editorOpen: false
                 });
               }}
-              className="edit"
             >
-              <span className="label-text">{compressedLabel}</span>
-              <span className={buttonClassName} />
-              <span className="edit-rarr">&rarr;</span>
-            </a>
+              <div>
+                <p>{this.state.description}</p>
+                <p className={this.props.warningMessageClassName}>{this.state.selectionWarning}</p>
+                <p>Selected: <strong>{compressedLabel}</strong></p>
+                {this.rangeComponent}
+              </div>
+            </Dialog>
           </div>
-          <Dialog
-            title={typeof humanName === 'string'
-              ? <h6>Edit range for <strong>{humanName}</strong></h6>
-              : <h6>Edit range</h6>}
-            actions={actions}
-            modal={false}
-            open={this.state.editorOpen}
-            onRequestClose={() => {
-              this.setState({
-                selectionWarning: '',
-                editorOpen: false
-              });
-            }}
-          >
-            <div>
-              <p>{this.state.description}</p>
-              <p className={this.props.warningMessageClassName}>{this.state.selectionWarning}</p>
-              <p>Selected: <strong>{compressedLabel}</strong></p>
-              {this.rangeComponent}
-            </div>
-          </Dialog>
-        </div>
-        </MuiThemeProvider>);
+        </MuiThemeProvider>
+      </div>);
   }
 }
 
