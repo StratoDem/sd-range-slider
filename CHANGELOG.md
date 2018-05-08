@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.8.0] 2018.05.08
+### Added
+- Add a `className` prop that will allow changes to the entire component
+
 [1.7.0] 2018.04.13
 ### Changed
 - The categorical version of the component will no longer allow a user to clear all selections
