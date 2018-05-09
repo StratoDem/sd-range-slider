@@ -212,15 +212,8 @@ export default class SDRangeSlider extends React.Component<Props, State> {
       singleValueFormatting } = this.props;
     const values = Object.keys(marks);
 
-    if (restrictedLower)
-      const minValue = Number.NEGATIVE_INFINITY;
-    else
-      const minValue = Math.min(...values);
-
-    if (restrictedHigher)
-      const maxVal = Number.POSITIVE_INFINITY;
-    else
-      const maxVal = Math.max(...values);
+    const minValue = restrictedLower ? Number.NEGATIVE_INFINITY : Math.min(...values);
+    const maxVal = restrictedHigher ? Number.POSITIVE_INFINITY : Math.max(...values);
 
     // Selected the entire range
     if (minValue === lowValSelected && maxVal === highValSelected)
