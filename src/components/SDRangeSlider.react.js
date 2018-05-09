@@ -78,6 +78,16 @@ type Props = {
   /** Formatter to use which takes min and max value */
   rangeFormatter?: string,
 
+  /** Indicates that the slider's maximum range has (true) or has not (false) been restricted.
+   * Defaults to false
+   */
+  restrictedHigher?: boolean,
+
+  /** Indicates that the slider's lower range has (true) or has not (false) been restricted.
+   * Defaults to false
+   */
+  restrictedLower?: boolean,
+
   /**
    * Dash-assigned callback that should be called whenever any of the
    * properties change
@@ -128,6 +138,8 @@ const defaultProps = {
   orLowerFormatter: 'Under {}',
   orHigherFormatter: '{} or higher',
   rangeFormatter: '{} to {}',
+  restrictedHigher: false,
+  restrictedLower: false,
   singleValueFormatting: true,
   splitLabels: true,
   updatemode: 'mouseup',
@@ -195,10 +207,13 @@ export default class SDRangeSlider extends React.Component<Props, State> {
       orHigherFormatter,
       orLowerFormatter,
       rangeFormatter,
+      restrictedHigher,
+      restrictedLower,
       singleValueFormatting } = this.props;
     const values = Object.keys(marks);
-    const minValue = Math.min(...values);
-    const maxVal = Math.max(...values);
+
+    const minValue = restrictedLower ? Number.NEGATIVE_INFINITY : Math.min(...values);
+    const maxVal = restrictedHigher ? Number.POSITIVE_INFINITY : Math.max(...values);
 
     // Selected the entire range
     if (minValue === lowValSelected && maxVal === highValSelected)
