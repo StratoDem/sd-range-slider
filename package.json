@@ -21,6 +21,7 @@
     "prepublish": "npm test && npm run build-dist-production && npm run copy-lib",
     "publish-all": "npm publish && python setup.py sdist upload",
     "publish-pypi": "npm run prepublish && python setup.py sdist upload",
+    "test": "jest --verbose",
     "test-watch": "builder run test-frontend-watch",
     "test-debug": "builder run test-frontend-debug",
     "uninstall-local": "pip uninstall sd-range-slider -y"
