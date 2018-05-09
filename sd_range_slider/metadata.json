@@ -277,6 +277,28 @@
           "computed": false
         }
       },
+      "restrictedHigher": {
+        "flowType": {
+          "name": "boolean"
+        },
+        "required": false,
+        "description": "Indicates that the slider's maximum range has (true) or has not (false) been restricted.\nDefaults to false",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "restrictedLower": {
+        "flowType": {
+          "name": "boolean"
+        },
+        "required": false,
+        "description": "Indicates that the slider's lower range has (true) or has not (false) been restricted.\nDefaults to false",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
       "setProps": {
         "flowType": {
           "name": "signature",
