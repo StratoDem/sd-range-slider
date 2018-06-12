@@ -107,10 +107,10 @@ type Props = {
      * will only trigger its value when the user has
      * finished dragging the slider. If `drag`, then
      * the slider will update its value continuously
-     * as it is being dragged.
+     * as it is being dragged. If `modalClose`, then will close when the modal has closed.
      * Only use `drag` if your updates are fast.
      */
-  updatemode?: 'mouseup' | 'drag',
+  updatemode?: 'mouseup' | 'drag' | 'modalClose',
 
   /** Value used to select the slider */
   value: Array<number>,
@@ -314,7 +314,15 @@ export default class SDRangeSlider extends React.Component<Props, State> {
       <FlatButton
         label="Done editing range"
         primary={true}
-        onClick={() => { this.setState({editorOpen: false}); }}
+        onClick={() => {
+          this.setState({editorOpen: false});
+          if (this.props.updatemode === 'modalClose') {
+            if (this.props.setProps)
+              this.props.setProps({value: this.state.value});
+            if (this.props.fireEvent)
+              this.props.fireEvent('change');
+          }
+        }}
       />
     ];
 
@@ -345,7 +353,7 @@ export default class SDRangeSlider extends React.Component<Props, State> {
               ? <h6>Edit range for <strong>{humanName}</strong></h6>
               : <h6>Edit range</h6>}
             actions={actions}
-            modal={false}
+            modal={this.props.updatemode === 'modalClose'}
             open={this.state.editorOpen}
             onRequestClose={() => {
               this.setState({

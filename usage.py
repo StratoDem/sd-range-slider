@@ -128,6 +128,32 @@ app.layout = html.Div([
     ),
     html.Div(id='output-restricted-all'),
 
+    # Test update on close
+    html.Div(
+        sd_range_slider.SDRangeSlider(
+            id='input-update-on-close',
+            value=[2, 3],
+            marks={val: {'label': label, 'style': {'font-size': '80%'}}
+                   for val, label in [
+                       (2, '25 to 34'),
+                       (3, '35 to 44'),
+                       (4, '45 to 49'),
+                       (5, '50 to 54')]},
+            minVal=2,
+            maxVal=5,
+            updatemode='modalClose',
+            orHigherFormatter='{} or older',
+            orLowerFormatter='Under {} years old',
+            rangeFormatter='{} to {} years old',
+            allValuesText='All ages',
+            restrictedHigher=True,
+            restrictedLower=True,
+            humanName='Age cohort',
+            description='Test description magic',
+            singleValueFormatting=False)
+    ),
+    html.Div(id='output-update-on-close'),
+
 ], style=dict(width=250))
 
 
@@ -164,6 +190,13 @@ def display_output(value):
     [dash.dependencies.Input('input-restricted-all', 'value')])
 def display_output(value):
     return 'Restricted lower and higher - You have entered {}'.format(value)
+
+
+@app.callback(
+    dash.dependencies.Output('output-update-on-close', 'children'),
+    [dash.dependencies.Input('input-update-on-close', 'value')])
+def display_output(value):
+    return 'Update on close - You have entered {}'.format(value)
 
 
 if __name__ == '__main__':

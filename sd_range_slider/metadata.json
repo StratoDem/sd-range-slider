@@ -346,7 +346,7 @@
       "updatemode": {
         "flowType": {
           "name": "union",
-          "raw": "'mouseup' | 'drag'",
+          "raw": "'mouseup' | 'drag' | 'modalClose'",
           "elements": [
             {
               "name": "literal",
@@ -355,11 +355,15 @@
             {
               "name": "literal",
               "value": "'drag'"
+            },
+            {
+              "name": "literal",
+              "value": "'modalClose'"
             }
           ]
         },
         "required": false,
-        "description": "Determines when the component should update\nits value. If `mouseup`, then the slider\nwill only trigger its value when the user has\nfinished dragging the slider. If `drag`, then\nthe slider will update its value continuously\nas it is being dragged.\nOnly use `drag` if your updates are fast.",
+        "description": "Determines when the component should update\nits value. If `mouseup`, then the slider\nwill only trigger its value when the user has\nfinished dragging the slider. If `drag`, then\nthe slider will update its value continuously\nas it is being dragged. If `modalClose`, then will close when the modal has closed.\nOnly use `drag` if your updates are fast.",
         "defaultValue": {
           "value": "'mouseup'",
           "computed": false
