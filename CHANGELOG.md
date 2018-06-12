@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[1.9.0] 2018.06.11
+### Added
+- Adds `modalClose` support to `updatemode` prop, which only fires `setProps` for `value` when the
+user clicks the close button on the `Dialog`
+
 [1.8.0] 2018.05.09
 ### Added
 - New props, `restrictedLower` and `restrictedHigher` may be passed to the component to alter when it uses certain formatting options
