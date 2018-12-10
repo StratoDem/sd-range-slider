@@ -13,4 +13,3 @@ venv/
 .DS_Store
 .idea/
 sd_range_slider/__pycache__/
-bundle.js*
