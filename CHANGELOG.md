@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+[2.0.0] 2018.06.11
+### Fixed
+- Adds static assets to serve locally
+
 [1.9.0] 2018.06.11
 ### Added
 - Adds `modalClose` support to `updatemode` prop, which only fires `setProps` for `value` when the
