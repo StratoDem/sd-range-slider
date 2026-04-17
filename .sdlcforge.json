@@ -1,0 +1,53 @@
+{
+  "_comment": "SDLC Forge configuration file for sd-range-slider",
+  "schema_version": "1.0",
+  "projects": [
+    {
+      "type": "node",
+      "name": "sd-range-slider",
+      "path": "",
+      "runtime": {
+        "name": "node",
+        "version": "18"
+      },
+      "build_tool": {
+        "name": "npm",
+        "version": "10"
+      },
+      "dependency": {
+        "command": "npm ci"
+      },
+      "build": {
+        "command": "npm run build-dist"
+      },
+      "tests": [
+        {
+          "type": "unit",
+          "command": "npm test -- --coverage --coverageDirectory=coverage --coverageReporters=lcov --reporters=default --reporters=jest-junit",
+          "timeout": 60
+        }
+      ],
+      "artefacts": {
+        "source_code": [
+          "src/"
+        ],
+        "test_code": [
+          "**/*.test.js"
+        ],
+        "deliverable": [
+          "lib/"
+        ],
+        "dependency_manifests": [
+          "package.json",
+          "package-lock.json"
+        ],
+        "tests_reports": [
+          "test-results/junit.xml"
+        ],
+        "coverage_reports": [
+          "coverage-reports/lcov.info"
+        ]
+      }
+    }
+  ]
+}
